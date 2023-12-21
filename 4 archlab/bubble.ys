@@ -1,0 +1,58 @@
+# 周燕居2200017754
+# Execution begins at address 0 
+	.pos 0
+	irmovq stack, %rsp  	# Set up stack pointer
+	call main		# Execute main program
+	halt			# Terminate program 
+
+# Array of 4 elements
+    .align 8
+    Array:
+        .quad 0xbca
+        .quad 0xcba
+        .quad 0xacb
+        .quad 0xcab
+        .quad 0xabc
+        .quad 0xbac
+
+main:	
+    irmovq Array,%rdi
+    irmovq $0x6,%rsi
+	call bubble_sort
+	ret
+
+bubble_sort:
+    irmovq $0x1,%r9
+    subq %r9,%rsi
+    irmovq $0x8,%r8
+    rrmovq %rdi,%rdx
+    jmp     test
+loop:
+    addq %r8,%rdx
+test:
+    subq %r9,%rsi
+    jge     loop
+loop1:
+    rrmovq %rdi,%r11
+loop2:
+    mrmovq (%r11),%r9
+    mrmovq $0x8(%r11),%r10
+    subq %r9,%r10
+    jge     flag1
+    mrmovq $0x8(%r11),%r10
+    rmmovq %r10,(%r11)
+    rmmovq %r9,$0x8(%r11)
+flag1:
+    addq %r8,%r11
+    rrmovq %rdx,%rcx
+    subq %r11,%rcx
+    jg      loop2
+    subq %r8,%rdx
+    rrmovq %rdi,%rcx
+    subq %rdx,%rcx
+    jl      loop1
+    ret
+
+# Stack starts here and grows to lower addresses
+	.pos 0x200
+stack:

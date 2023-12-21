@@ -1,0 +1,196 @@
+#/* $begin ncopy-ys */
+##################################################################
+# ncopy.ys - Copy a src block of len words to dst.
+# Return the number of positive words (>0) contained in src.
+#
+# Include your name and ID here.
+# 周燕居 2200017754
+# Describe how and why you modified the baseline code.
+# 增加iaddq
+# 删除xor %rax,本身就是零
+# 将循环十路展开
+# 不足10的部分用三叉树选择，先跳转可能性较大的分支
+##################################################################
+# Do not modify this portion
+# Function prologue.
+# %rdi = src, %rsi = dst, %rdx = len
+ncopy:
+
+##################################################################
+# You can modify this portion
+Head:
+	iaddq $-10,%rdx		
+	jl Root			
+
+Loop10:
+	mrmovq (%rdi), %r8
+	mrmovq 8(%rdi), %r9
+	mrmovq 16(%rdi), %r10
+	mrmovq 24(%rdi), %r11
+	mrmovq 32(%rdi), %r12
+	mrmovq 40(%rdi), %r13
+	mrmovq 48(%rdi), %r14
+	mrmovq 56(%rdi), %rbx
+	mrmovq 64(%rdi), %rbp
+	mrmovq 72(%rdi), %rcx
+	rmmovq %r8, (%rsi)
+	rmmovq %r9, 8(%rsi)
+	rmmovq %r10, 16(%rsi)
+	rmmovq %r11, 24(%rsi)
+	rmmovq %r12, 32(%rsi)
+	rmmovq %r13, 40(%rsi)
+	rmmovq %r14, 48(%rsi)
+	rmmovq %rbx, 56(%rsi)
+	rmmovq %rbp, 64(%rsi)
+	rmmovq %rcx, 72(%rsi)
+	andq %r8, %r8
+	jle Npos0
+	iaddq $1, %rax
+Npos0:
+	andq %r9, %r9
+	jle Npos1
+	iaddq $1, %rax
+Npos1:
+	andq %r10, %r10
+	jle Npos2
+	iaddq $1, %rax
+Npos2:
+	andq %r11, %r11
+	jle Npos3
+	iaddq $1, %rax
+Npos3:
+	andq %r12, %r12
+	jle Npos4
+	iaddq $1, %rax
+Npos4:
+	andq %r13, %r13
+	jle Npos5
+	iaddq $1, %rax
+Npos5:
+	andq %r14, %r14
+	jle Npos6
+	iaddq $1, %rax
+Npos6:
+	andq %rbx, %rbx
+	jle Npos7
+	iaddq $1, %rax
+Npos7:
+	andq %rbp, %rbp
+	jle Npos8
+	iaddq $1, %rax
+Npos8:
+	andq %rcx, %rcx
+	jle Npos9
+	iaddq $1, %rax
+Npos9:
+	iaddq $80, %rdi
+	iaddq $80, %rsi
+	iaddq $-10,%rdx		
+	jge Loop10			
+
+Root:
+	iaddq $7, %rdx
+	jg Right     #4,5,6,7,8,9
+	jl Left      #0,1,2
+	je flag3     #3
+
+Left:
+	iaddq $1, %rdx
+	je flag2
+	iaddq $1, %rdx
+	je flag1
+	ret
+
+Right:
+	iaddq $-2, %rdx
+	jg RightRight   #6,7,8,9
+	je flag5        #5
+	jl flag4        #4
+
+RightRight:
+	iaddq $-3, %rdx
+	je flag8
+	iaddq $1, %rdx
+	je flag7
+	jl flag6
+
+flag9:
+	mrmovq 64(%rdi), %r8
+	rmmovq %r8, 64(%rsi)
+	andq %r8, %r8
+
+flag8:
+	mrmovq 56(%rdi), %r8
+	jle Npos10
+	iaddq $1, %rax
+Npos10:
+	rmmovq %r8, 56(%rsi)
+	andq %r8, %r8
+
+flag7:
+	mrmovq 48(%rdi), %r8
+	jle Npos11
+	iaddq $1, %rax
+Npos11:
+	rmmovq %r8, 48(%rsi)
+	andq %r8, %r8
+	
+flag6:
+	mrmovq 40(%rdi), %r8
+	jle Npos12
+	iaddq $1, %rax
+Npos12:
+	rmmovq %r8, 40(%rsi)
+	andq %r8, %r8
+
+flag5:
+	mrmovq 32(%rdi), %r8
+	jle Npos13
+	iaddq $1, %rax
+Npos13:
+	rmmovq %r8, 32(%rsi)
+	andq %r8, %r8
+
+flag4:
+	mrmovq 24(%rdi), %r8
+	jle Npos14
+	iaddq $1, %rax
+Npos14:
+	rmmovq %r8, 24(%rsi)
+	andq %r8, %r8
+
+flag3:
+	mrmovq 16(%rdi), %r8
+	jle Npos15
+	iaddq $1, %rax
+Npos15:
+	rmmovq %r8, 16(%rsi)
+	andq %r8, %r8
+	
+flag2:
+	mrmovq 8(%rdi), %r8
+	jle Npos16
+	iaddq $1, %rax
+Npos16:
+	rmmovq %r8, 8(%rsi)
+	andq %r8, %r8
+	
+flag1:
+	mrmovq (%rdi), %r8
+	jle Npos17
+	iaddq $1, %rax
+Npos17:
+	rmmovq %r8, (%rsi)
+	andq %r8, %r8
+	jle Done
+	iaddq $1, %rax
+
+##################################################################
+# Do not modify the following section of code
+# Function epilogue.
+Done:
+	ret
+##################################################################
+# Keep the following label at the end of your function
+End:
+#/* $end ncopy-ys */

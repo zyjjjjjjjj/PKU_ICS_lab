@@ -1,0 +1,6 @@
+Now I am become Death,The destroyer of worlds.
+1 2 4 8 16 32
+0 -959
+5 2
+gamfeg
+6 3 1 2 5 4
