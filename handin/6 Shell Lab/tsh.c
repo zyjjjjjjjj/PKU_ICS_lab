@@ -1,6 +1,6 @@
 /* 
  * tsh - A tiny shell program with job control
- * 周燕居 2200017754
+ * 
  * <Put your name and login ID here>
  */
 #include <assert.h>

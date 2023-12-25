@@ -4,7 +4,7 @@
 # Return the number of positive words (>0) contained in src.
 #
 # Include your name and ID here.
-# 周燕居 2200017754
+# 
 # Describe how and why you modified the baseline code.
 # 增加iaddq
 # 删除xor %rax,本身就是零

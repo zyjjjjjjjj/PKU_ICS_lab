@@ -1,4 +1,4 @@
-// 周燕居 2200017754
+// 
 #include "cachelab.h"
 #include <unistd.h>
 #include <getopt.h>
